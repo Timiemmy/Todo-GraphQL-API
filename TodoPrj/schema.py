@@ -40,4 +40,40 @@ class Query(graphene.ObjectType):
         return Todo.objects.get(pk=todo_id)
 
 
-schema = graphene.Schema(query=Query)
+class TodoInput(graphene.InputObjectType):
+    id = graphene.ID()
+    owner = graphene.ID()
+    title = graphene.String()
+    body = graphene.String()
+    created = graphene.DateTime()
+    completed = graphene.Boolean()
+
+
+class CreateTodo(graphene.Mutation):
+    class Arguments:
+        todo_data = TodoInput(required=True)
+
+    todo = graphene.Field(TodoType)
+
+    @staticmethod
+    def mutate(root, info, todo_data=None):
+        owner = CustomUser.objects.get(pk=todo_data.owner)
+
+        todo_instance = Todo(
+            title=todo_data.title,
+            owner=owner,
+            body=todo_data.body,
+            created=todo_data.created,
+            completed=todo_data.completed,
+        )
+
+        todo_instance.save()
+
+        return CreateTodo(todo=todo_instance)
+
+
+class Mutation(graphene.ObjectType):
+    create_todo = CreateTodo.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
