@@ -135,15 +135,15 @@ AUTH_USER_MODEL = "account.CustomUser"
 
 GRAPHENE = {
     "SCHEMA": "TodoPrj.schema.schema",
-    # "MIDDLEWARE": [
-    #     "graphql_jwt.middleware.JSONWebTokenMiddleware",
-    # ],
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
 }
 
-# AUTHENTICATION_BACKENDS = [
-#     'graphql_jwt.backends.JSONWebTokenBackend',
-#     'django.contrib.auth.backends.ModelBackend',
-# ]
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
